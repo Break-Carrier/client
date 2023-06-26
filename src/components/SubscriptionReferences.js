@@ -2,33 +2,48 @@
 import React, { useState, useEffect } from 'react';
 
 const SubscriptionReferences = () => {
-  const [subscriptions, setSubscriptions] = useState([]);
-  const [error, setError] = useState(null);
+  // On initialise deux états : subscriptions pour stocker les données récupérées, et error pour stocker une éventuelle erreur
+const [subscriptions, setSubscriptions] = useState([]);
+const [error, setError] = useState(null);
 
-  const fetchData = async (url) => {
-    try {
-      const response = await fetch(url);
-  
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP! status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      setSubscriptions(data);
-      setError(null);
-    } catch (error) {
-      setError(error.message);
-      setSubscriptions([]);
+// On définit une fonction asynchrone qui permet de récupérer les données d'une url spécifique
+const fetchData = async (url) => {
+  try {
+    // On fait une requête fetch à l'url spécifiée
+    const response = await fetch(url);
+
+    // Si la réponse n'est pas ok (statut HTTP différent de 200), on lance une erreur
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP! status: ${response.status}`);
     }
-  };
-  
-  const fetchAllData = () => {
-    fetchData('http://localhost:5000/subscriptions');
-  };
-  
-  const fetchFilteredData = () => {
-    fetchData('http://localhost:5000/filtered-subscriptions');
-  };
+
+    // Si la réponse est ok, on récupère les données en format JSON
+    const data = await response.json();
+
+    // On met à jour l'état subscriptions avec les données récupérées
+    setSubscriptions(data);
+
+    // On met à jour l'état error à null car la requête a réussi
+    setError(null);
+  } catch (error) {
+    // Si une erreur se produit pendant la requête, on met à jour l'état error avec le message d'erreur
+    setError(error.message);
+
+    // On met également à jour l'état subscriptions à un tableau vide car la requête a échoué
+    setSubscriptions([]);
+  }
+};
+
+// On définit une fonction pour récupérer toutes les données en appelant la fonction fetchData avec l'url de toutes les subscriptions
+const fetchAllData = () => {
+  fetchData('http://localhost:5000/subscriptions');
+};
+
+// On définit une fonction pour récupérer uniquement les données filtrées en appelant la fonction fetchData avec l'url des subscriptions filtrées
+const fetchFilteredData = () => {
+  fetchData('http://localhost:5000/filtered-subscriptions');
+};
+
   
 
   // useEffect(() => {
